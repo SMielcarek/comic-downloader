@@ -32,7 +32,7 @@ public class XKCDComicService implements ComicService {
     @Override
     public Comic getTodaysComic() throws ComicRetrievalException {
         try {
-            Request request = buildRequest(xkcdProperties.getUrl());
+            Request request = buildRequest(xkcdProperties.getDownloadUrl());
             ResponseBody responseBody = httpClient.newCall(request).execute().body();
             return parseResponseBody(responseBody);
         }

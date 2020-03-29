@@ -1,7 +1,8 @@
 package com.smcodinglab.xkcd;
 
+import com.smcodinglab.xkcd.properties.XKCDProperties;
 import okhttp3.OkHttpClient;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,10 +12,20 @@ import java.net.Proxy;
 @Configuration
 public class HttpClientConfiguration {
 
+    private XKCDProperties xkcdProperties;
+
+    @Autowired
+    public HttpClientConfiguration(XKCDProperties xkcdProperties) {
+        this.xkcdProperties = xkcdProperties;
+    }
+
     @Bean
     public OkHttpClient getHttpClient() {
-        //Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("http.proxy.fmr.com", 8000));
-        return new OkHttpClient.Builder().build();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (xkcdProperties.isProxyRequired()) {
+            builder.proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(xkcdProperties.getProxyUrl(), xkcdProperties.getProxyPort())));
+        }
+        return builder.build();
     }
 
 }
