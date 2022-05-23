@@ -10,12 +10,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
 @Slf4j
 @Service
+@Qualifier("OkHttpClient")
 public class XKCDComicService implements ComicService {
 
     private final OkHttpClient httpClient;
@@ -31,6 +33,7 @@ public class XKCDComicService implements ComicService {
 
     @Override
     public Comic getTodaysComic() throws ComicRetrievalException {
+        log.info("Retrieving using OkHttpClient");
         try {
             Request request = buildRequest(xkcdProperties.getDownloadUrl());
             ResponseBody responseBody = httpClient.newCall(request).execute().body();
