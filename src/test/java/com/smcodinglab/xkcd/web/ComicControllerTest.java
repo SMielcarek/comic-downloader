@@ -3,33 +3,33 @@ package com.smcodinglab.xkcd.web;
 import com.smcodinglab.xkcd.domain.Comic;
 import com.smcodinglab.xkcd.exception.ComicRetrievalException;
 import com.smcodinglab.xkcd.services.ComicService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.io.IOException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = ComicController.class)
-public class ComicControllerTest {
+class ComicControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
+    @Qualifier("OkHttpClient")
     private ComicService comicService;
 
     @Test
-    public void todaysComicTitleTest_returns200() throws Exception {
+    void todaysComicTitleTest_returns200() throws Exception {
         Comic comic = new Comic();
         comic.setTitle("Test title");
         Mockito.when(comicService.getTodaysComic()).thenReturn(comic);
@@ -39,7 +39,7 @@ public class ComicControllerTest {
     }
 
     @Test
-    public void todaysComicTitleTest_returns503() throws Exception {
+    void todaysComicTitleTest_returns503() throws Exception {
         Mockito.when(comicService.getTodaysComic()).thenThrow(new ComicRetrievalException("Test Exception"));
         mockMvc.perform(get("/comic"))
                 .andExpect(content().string("Test Exception"))
