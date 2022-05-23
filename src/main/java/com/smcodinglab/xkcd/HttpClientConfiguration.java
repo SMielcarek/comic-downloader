@@ -5,6 +5,7 @@ import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -12,7 +13,7 @@ import java.net.Proxy;
 @Configuration
 public class HttpClientConfiguration {
 
-    private XKCDProperties xkcdProperties;
+    private final XKCDProperties xkcdProperties;
 
     @Autowired
     public HttpClientConfiguration(XKCDProperties xkcdProperties) {
@@ -28,4 +29,8 @@ public class HttpClientConfiguration {
         return builder.build();
     }
 
+    @Bean
+    public RestTemplate getRestTemplate() {
+        return new RestTemplate();
+    }
 }
